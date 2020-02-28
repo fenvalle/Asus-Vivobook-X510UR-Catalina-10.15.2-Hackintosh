@@ -13,18 +13,46 @@
 			<key>Fixes</key>
 			<dict>
 				<key>FixHDA</key>
-				<true/>
-				<key>FixHPET</key>
 				<false/>
+				<key>FixHPET</key>
+				<true/>
 				<key>FixRTC</key>
 				<true/>
-				<key>FixShutdown</key>
-				<false/>
 				<key>FixTMR</key>
 				<true/>
 			</dict>
 			<key>Patches</key>
 			<array>
+				<dict>
+					<key>Comment</key>
+					<string>ELAN: change USTP to XSTP to assign default values to SSCN and FMCN</string>
+					<key>Disabled</key>
+					<true/>
+					<key>Find</key>
+					<data>VVNUUA==</data>
+					<key>Replace</key>
+					<data>WFNUUA==</data>
+				</dict>
+				<dict>
+					<key>Comment</key>
+					<string>ELAN: change Method(_STA,0,NS) in GPI0 to XSTA</string>
+					<key>Disabled</key>
+					<true/>
+					<key>Find</key>
+					<data>X1NUQQCgCZNTQlJH</data>
+					<key>Replace</key>
+					<data>WFNUQQCgCZNTQlJH</data>
+				</dict>
+				<dict>
+					<key>Comment</key>
+					<string>ELAN: change Method(_CRS,0,S) in ETPD to XCRS</string>
+					<key>Disabled</key>
+					<true/>
+					<key>Find</key>
+					<data>X0NSUwgIU0JGSQ==</data>
+					<key>Replace</key>
+					<data>WENSUwgIU0JGSQ==</data>
+				</dict>
 				<dict>
 					<key>Comment</key>
 					<string>AICPUPM: change APSS to APXX</string>
@@ -165,7 +193,21 @@
 					<key>Replace</key>
 					<data>WFExMQg=</data>
 				</dict>
+				<dict>
+					<key>Comment</key>
+					<string>Rename HECI to IMEI (PAVP)</string>
+					<key>Disabled</key>
+					<false/>
+					<key>Find</key>
+					<data>SEVDSQ==</data>
+					<key>Replace</key>
+					<data>SU1FSQ==</data>
+				</dict>
 			</array>
+			<key>SlpSmiAtWake</key>
+			<true/>
+			<key>SuspendOverride</key>
+			<true/>
 		</dict>
 		<key>DisabledAML</key>
 		<array>
@@ -190,6 +232,8 @@
 			</dict>
 		</array>
 		<key>FixHeaders</key>
+		<true/>
+		<key>HaltEnabler</key>
 		<true/>
 		<key>SSDT</key>
 		<dict>
@@ -219,11 +263,9 @@
 	<key>Boot</key>
 	<dict>
 		<key>Arguments</key>
-		<string>abm_firstpolldelay=8000 rootless=0 </string>
+		<string>abm_firstpolldelay=8000 rootless=0 brcmfx-driver=1 brcmfx-country=#a bpr_probedelay=100 bpr_initialdelay=300 bpr_postresetdelay=300 kext-dev-mode=1</string>
 		<key>DefaultVolume</key>
 		<string>LastBootedVolume</string>
-		<key>HibernationFixup</key>
-		<true/>
 		<key>NeverHibernate</key>
 		<true/>
 		<key>NoEarlyProgress</key>
@@ -237,10 +279,12 @@
 	</dict>
 	<key>CPU</key>
 	<dict>
+		<key>FrequencyMHz</key>
+		<integer>1600</integer>
 		<key>HWPEnable</key>
-		<true/>
+		<false/>
 		<key>UseARTFrequency</key>
-		<true/>
+		<false/>
 	</dict>
 	<key>Devices</key>
 	<dict>
@@ -255,6 +299,21 @@
 		</dict>
 		<key>Properties</key>
 		<dict>
+			<key>PciRoot(0x0)/Pci(0x1C,0x5)/Pci(0x0)</key>
+			<dict>
+				<key>AAPL,slot-name</key>
+				<string>WLAN</string>
+				<key>compatible</key>
+				<string>pci14e4,4331</string>
+				<key>device_type</key>
+				<string>AirPort Extreme</string>
+				<key>model</key>
+				<string>DW1820A (BCM4350) 802.11ac Wireless</string>
+				<key>name</key>
+				<string>Airport</string>
+				<key>pci-aspm-default</key>
+				<integer>0</integer>
+			</dict>
 			<key>PciRoot(0x0)/Pci(0x1f,0x3)</key>
 			<dict>
 				<key>AAPL,slot-name</key>
@@ -280,10 +339,6 @@
 				<data>G1kAAA==</data>
 				<key>device_type</key>
 				<string>Display Controller</string>
-				<key>framebuffer-con0-enable</key>
-				<data>AQAAAA==</data>
-				<key>framebuffer-con0-pipe</key>
-				<data>EgAAAA==</data>
 				<key>framebuffer-con1-busid</key>
 				<data>AAAAAA==</data>
 				<key>framebuffer-con1-enable</key>
@@ -299,7 +354,7 @@
 				<key>framebuffer-patch-enable</key>
 				<data>AQAAAA==</data>
 				<key>framebuffer-unifiedmem</key>
-				<data>AAAAYA==</data>
+				<data>AAAAgA==</data>
 				<key>hda-gfx</key>
 				<string>onboard-1</string>
 				<key>model</key>
@@ -366,10 +421,14 @@
 	</dict>
 	<key>KernelAndKextPatches</key>
 	<dict>
-		<key>AppleIntelCPUPM</key>
-		<false/>
+		<key>AppleRTC</key>
+		<true/>
 		<key>DellSMBIOSPatch</key>
 		<false/>
+		<key>ForceKextsToLoad</key>
+		<array>
+			<string>\System\Library\Extensions\IONetworkingFamily.kext</string>
+		</array>
 		<key>KernelLapic</key>
 		<false/>
 		<key>KernelPm</key>
@@ -407,7 +466,7 @@
 				<key>Comment</key>
 				<string>USB Port Limit Patch 1 PMHeart/DalianSky</string>
 				<key>Disabled</key>
-				<false/>
+				<true/>
 				<key>Find</key>
 				<data>g/sPDw==</data>
 				<key>InfoPlistPatch</key>
@@ -423,7 +482,7 @@
 				<key>Comment</key>
 				<string>USB Port Limit Patch 2 PMHeart/DalianSky</string>
 				<key>Disabled</key>
-				<false/>
+				<true/>
 				<key>Find</key>
 				<data>g/kPDw==</data>
 				<key>InfoPlistPatch</key>
@@ -435,21 +494,9 @@
 				<key>Replace</key>
 				<data>g/k/Dw==</data>
 			</dict>
-			<dict>
-				<key>Disabled</key>
-				<false/>
-				<key>Find</key>
-				<data>ILniAAAADzA=</data>
-				<key>InfoPlistPatch</key>
-				<false/>
-				<key>Name</key>
-				<string>xcpm_idle instant reboot</string>
-				<key>Replace</key>
-				<data>ILniAAAAkJA=</data>
-			</dict>
 		</array>
 		<key>PanicNoKextDump</key>
-		<true/>
+		<false/>
 	</dict>
 	<key>RtVariables</key>
 	<dict>
@@ -465,31 +512,31 @@
 	<key>SMBIOS</key>
 	<dict>
 		<key>BiosReleaseDate</key>
-		<string>11/14/2019</string>
+		<string>01/05/2020</string>
 		<key>BiosVendor</key>
 		<string>Apple Inc.</string>
 		<key>BiosVersion</key>
-		<string>MBP152.88Z.F000.B00.1911142159</string>
+		<string>MBA82.88Z.F000.B00.2001052203</string>
 		<key>Board-ID</key>
-		<string>Mac-827FB448E656EC26</string>
+		<string>Mac-226CB3C6A851A671</string>
 		<key>BoardManufacturer</key>
 		<string>Apple Inc.</string>
 		<key>BoardSerialNumber</key>
-		<string>C02ZF6YRJHCDA1B95</string>
+		<string>FVF045600GU00001H</string>
 		<key>BoardType</key>
 		<integer>10</integer>
 		<key>BoardVersion</key>
 		<string>1.0</string>
 		<key>ChassisAssetTag</key>
-		<string>MacBook-Aluminum</string>
+		<string>Air-Enclosure</string>
 		<key>ChassisManufacturer</key>
 		<string>Apple Inc.</string>
 		<key>ChassisType</key>
 		<string>0x09</string>
 		<key>EfiVersion</key>
-		<string>1037.60.58.0.0</string>
+		<string>1037.80.41.0.0</string>
 		<key>Family</key>
-		<string>MacBook Pro</string>
+		<string>MacBook Air</string>
 		<key>FirmwareFeatures</key>
 		<string>0xFC0FE137</string>
 		<key>FirmwareFeaturesMask</key>
@@ -501,13 +548,13 @@
 		<key>Mobile</key>
 		<true/>
 		<key>PlatformFeature</key>
-		<string>0x02</string>
+		<string>0x3A</string>
 		<key>ProductName</key>
-		<string>MacBookPro15,4</string>
+		<string>MacBookAir8,2</string>
 		<key>SerialNumber</key>
-		<string>C02ZF6YRJHCD</string>
+		<string>FVFDNNZYLYWM</string>
 		<key>SmUUID</key>
-		<string>2458D52E-D953-4F57-9214-2E1570AF628E</string>
+		<string>19C504F6-2DCA-44C7-8543-5556690923DF</string>
 		<key>Version</key>
 		<string>1.0</string>
 	</dict>
@@ -516,7 +563,7 @@
 		<key>CustomUUID</key>
 		<string>2C81E5E5-B3DA-5095-908D-CC9618086CA6</string>
 		<key>InjectKexts</key>
-		<string>Detect</string>
+		<string>Yes</string>
 		<key>InjectSystemID</key>
 		<true/>
 	</dict>
